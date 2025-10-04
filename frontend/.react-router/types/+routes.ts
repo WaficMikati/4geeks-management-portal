@@ -16,10 +16,10 @@ type Pages = {
   "/users": {
     params: {};
   };
-  "/orders": {
+  "/orders/new": {
     params: {};
   };
-  "/orders.new": {
+  "/orders": {
     params: {};
   };
 };
@@ -27,7 +27,7 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/users" | "/orders" | "/orders.new";
+    page: "/" | "/users" | "/orders/new" | "/orders";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
@@ -37,12 +37,12 @@ type RouteFiles = {
     id: "routes/users";
     page: "/users";
   };
+  "routes/orders.new.jsx": {
+    id: "routes/orders.new";
+    page: "/orders/new";
+  };
   "routes/orders.jsx": {
     id: "routes/orders";
     page: "/orders";
-  };
-  "routes/orders.new.jsx": {
-    id: "routes/orders.new";
-    page: "/orders.new";
   };
 };
