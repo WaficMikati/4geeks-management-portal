@@ -13,7 +13,7 @@ export function UserCard({ name, email, id, createdAt, orders }) {
         <img
           src='https://placehold.co/75x75'
           alt='...'
-          className='img-fluid rounded-circle'
+          className='img-fluid rounded-circle my-1'
         />
       </td>
       <td className='text-start'>{id}</td>

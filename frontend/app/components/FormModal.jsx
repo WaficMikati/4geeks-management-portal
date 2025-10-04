@@ -16,7 +16,7 @@ export function FormModal({ type, formFields }) {
   if (!isOpen) {
     return (
       <button
-        className='btn btn-success position-absolute start-0 text-capitalize'
+        className='btn btn-success position-absolute start-0 ms-3 text-capitalize'
         onClick={() => setIsOpen(true)}
       >
         Add {type}
