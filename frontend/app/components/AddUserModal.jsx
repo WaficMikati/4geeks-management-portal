@@ -2,10 +2,15 @@ import { Form, useActionData, useNavigation } from 'react-router'
 import { useState, useEffect } from 'react'
 import { InputGroup } from './InputGroup'
 
-export function FormModal({ type, formFields }) {
+export function AddUserModal({ form, children }) {
   const [isOpen, setIsOpen] = useState(false)
   const actionData = useActionData()
   const navigation = useNavigation()
+
+  const formFields = [
+    { name: 'name', placeholder: 'First Middle Last' },
+    { name: 'email', placeholder: 'email@domain.com' }
+  ]
 
   useEffect(() => {
     if (navigation.state === 'idle' && actionData && !actionData.error) {
@@ -13,26 +18,24 @@ export function FormModal({ type, formFields }) {
     }
   }, [navigation.state, actionData])
 
+  const modalButton = (
+    <button
+      className={`btn btn-success  text-capitalize ${
+        form ? 'form-control' : 'position-absolute start-0'
+      }`}
+      onClick={() => setIsOpen(true)}
+    >
+      {children}
+    </button>
+  )
+
   if (!isOpen) {
-    return (
-      <button
-        className='btn btn-success position-absolute start-0 ms-3 text-capitalize'
-        onClick={() => setIsOpen(true)}
-      >
-        Add {type}
-      </button>
-    )
+    return modalButton
   }
 
   return (
     <>
-      <button
-        className='btn btn-success position-absolute start-0 text-capitalize'
-        onClick={() => setIsOpen(true)}
-      >
-        Add {type}
-      </button>
-
+      {modalButton}
       <div
         className='modal show d-block'
         tabIndex='-1'
@@ -40,9 +43,9 @@ export function FormModal({ type, formFields }) {
         <div className='modal-dialog modal-dialog-centered'>
           <div className='modal-content'>
             <Form method='post'>
-              <div className='modal-header'>
+              <div className='modal-header border-0'>
                 <h1 className='modal-title fs-5 text-capitalize'>
-                  Add New {type}
+                  Add New User
                 </h1>
                 <button
                   type='button'
@@ -68,7 +71,7 @@ export function FormModal({ type, formFields }) {
                   />
                 ))}
               </div>
-              <div className='modal-footer'>
+              <div className='modal-footer pt-0 border-0'>
                 <button
                   type='button'
                   className='btn btn-secondary'
