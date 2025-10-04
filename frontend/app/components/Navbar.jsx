@@ -37,7 +37,7 @@ export default function Navbar() {
           </li>
           <li className='nav-item'>
             <button
-              className={`nav-link`}
+              className='nav-link'
               onClick={toggleTheme}
             >
               <FontAwesomeIcon icon={faLightbulb} />

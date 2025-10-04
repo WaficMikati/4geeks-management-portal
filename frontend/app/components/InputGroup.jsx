@@ -8,6 +8,7 @@ export function InputGroup({ name, placeholder }) {
         {name}
       </label>
       <input
+        name={name}
         id={`${name}-input`}
         type='text'
         className='form-control'
