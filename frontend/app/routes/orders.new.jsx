@@ -1,7 +1,6 @@
 import { Link } from 'react-router'
-import { InputGroup } from '../components/InputGroup'
 
-export default function CreateOrder() {
+export default function NewOrder() {
   return (
     <form className='card'>
       <div className='card-header'>

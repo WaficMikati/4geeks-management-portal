@@ -1,21 +1,20 @@
 export function InputGroup({ name, placeholder }) {
   return (
-    <div className='input-group mb-2'>
+    <div className='form-floating my-3'>
+      <input
+        className='form-control'
+        type='text'
+        name={name}
+        id={`floating-${name}`}
+        placeholder={placeholder}
+        autoComplete={name}
+      />
       <label
-        className='w-25 input-group-text text-capitalize'
-        htmlFor={`${name}-input`}
+        className='text-capitalize'
+        htmlFor={`floating-${name}`}
       >
         {name}
       </label>
-      <input
-        name={name}
-        id={`${name}-input`}
-        type='text'
-        className='form-control'
-        placeholder={placeholder}
-        autoComplete={name}
-        required
-      />
     </div>
   )
 }

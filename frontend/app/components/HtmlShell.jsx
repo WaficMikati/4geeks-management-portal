@@ -1,20 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { Links, Meta, Scripts, ScrollRestoration } from 'react-router'
 import Navbar from './Navbar'
-import Footer from './Footer'
-import { useTheme } from '../context/ThemeContext'
 
 export default function HtmlShell({
   children,
   title = 'React Router Template'
 }) {
-  const { theme } = useTheme()
-
   return (
-    <html
-      lang='en'
-      data-bs-theme={theme}
-    >
+    <html lang='en'>
       <head>
         <meta charSet='UTF-8' />
         <meta
@@ -26,9 +19,12 @@ export default function HtmlShell({
         <Links />
       </head>
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <div className='d-flex flex-column vh-100'>
+          <Navbar />
+          <div className='flex-grow-1 d-flex flex-column overflow-hidden'>
+            {children}
+          </div>
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>

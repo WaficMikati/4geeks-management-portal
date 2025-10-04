@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from app.routes import users, orders
 
 main_bp = Blueprint("main", __name__, url_prefix="/api")
