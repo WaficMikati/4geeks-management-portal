@@ -1,8 +1,6 @@
 export {
   faLightbulb,
-  faHome,
   faPlus,
-  faX,
   faUsers,
   faBoxOpen,
   faShoppingCart,

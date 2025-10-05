@@ -32,7 +32,11 @@ def get_products():
                 ],
             }
         ), 200
-    except Exception:
+    except Exception as e:
+        import traceback
+
+        print(f"ERROR: {e}")
+        traceback.print_exc()
         return jsonify(
             {
                 "success": False,
