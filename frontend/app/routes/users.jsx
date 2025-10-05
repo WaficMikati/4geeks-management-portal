@@ -2,6 +2,8 @@ import { useLoaderData } from 'react-router'
 import { AddUserModal } from '../components/AddUserModal'
 import { UserEntry } from '../components/UserEntry'
 import { getUsers, addUser } from '../utils/apiCalls'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '../utils/faIcons'
 
 export { getUsers as loader }
 export { addUser as action }
@@ -12,23 +14,24 @@ export default function Users() {
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
       <div className='container py-3 flex-shrink-0'>
-        <div className='d-flex justify-content-center align-items-center position-relative '>
-          <h1 className='m-0'>Users</h1>
-          <AddUserModal>Add User</AddUserModal>
+        <h1 className='m-0 text-center display-5'>Users</h1>
+      </div>
+
+      <div className='container flex-shrink-0 px-3 mb-3'>
+        <div className='input-group flex-nowrap'>
+          <input
+            className='form-control p-3 fs-5'
+            type='text'
+            placeholder='Type to search users'
+          />
+          <AddUserModal>
+            <FontAwesomeIcon icon={faPlus} />
+          </AddUserModal>
         </div>
       </div>
 
-      <div className='container-fluid container-lg flex-shrink-0 px-3'>
-        <input
-          className='form-control fs-5 p-3 mb-3 text-center'
-          type='text'
-          name='search'
-          placeholder='Type to search for user'
-        />
-      </div>
-
       <div className='flex-grow-1 overflow-auto'>
-        <div className='container-fluid container-lg h-100'>
+        <div className='container h-100'>
           <table className='table table-striped table-hover text-center mb-0 table-borderless'>
             <thead className='table sticky-top z-2'>
               <tr>
@@ -41,12 +44,12 @@ export default function Users() {
               </tr>
             </thead>
             <tbody>
-              {users.data.map(({ name, email, id, created_at }, i) => (
+              {users.data.map(({ name, email, id, created_at }) => (
                 <UserEntry
-                  key={i}
+                  key={id}
+                  id={id}
                   name={name}
                   email={email}
-                  id={id}
                   createdAt={created_at}
                 />
               ))}

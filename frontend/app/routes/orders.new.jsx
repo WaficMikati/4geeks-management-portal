@@ -19,29 +19,30 @@ export default function NewOrder() {
     }
   }, [actionData])
 
-  function selectUser(e) {
-    setSelectedUser(e)
+  function selectUser(user) {
+    setSelectedUser(user)
   }
 
   return (
-    <div className='d-flex flex-column h-100  overflow-hidden'>
+    <div className='d-flex flex-column h-100 overflow-hidden'>
       <div className='container py-3 flex-shrink-0'>
         <div className='d-flex justify-content-center align-items-center position-relative'>
           <Link
-            className='btn btn-primary position-absolute start-0'
+            className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
             to='/orders'
           >
             Back to Orders
           </Link>
-          <h1 className='m-0'>New Order</h1>
+          <h1 className='m-0 display-5'>New Order</h1>
         </div>
       </div>
-      <div className='container flex-shrink-0 mb-2'>
+
+      <div className='container flex-shrink-0 px-3 mb-3'>
         <div className='d-flex flex-column gap-2'>
           <button
             className={`btn btn-${
               selectedUser ? 'success' : 'secondary disabled'
-            } p-3 fs-5 `}
+            } p-3 fs-5`}
           >
             {selectedUser
               ? 'Proceed to product selection'
@@ -49,7 +50,7 @@ export default function NewOrder() {
           </button>
           <div className='input-group flex-nowrap'>
             <input
-              className='form-control w-75 p-3 fs-5'
+              className='form-control w-75 p-3 fs-5 bg-body'
               type='text'
               placeholder='Type to search users'
             />
@@ -59,38 +60,36 @@ export default function NewOrder() {
           </div>
         </div>
       </div>
+
       <div className='flex-grow-1 overflow-auto'>
         <div className='container h-100'>
-          <div className='overflow-hidden'>
-            <table className='table table-borderless table-hover mb-0 fs-5'>
-              <thead className='sticky-top table'>
-                <tr>
-                  <th>ID#</th>
-                  <th>Name</th>
-                  <th>Email</th>
+          <table className='table table-borderless table-hover mb-0 fs-5'>
+            <thead className='sticky-top table'>
+              <tr>
+                <th>ID#</th>
+                <th>Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.data.map(user => (
+                <tr
+                  onClick={() => selectUser(user)}
+                  className={`user-select-none ${
+                    user === selectedUser ? 'table-active' : ''
+                  }`}
+                  style={{ cursor: 'pointer' }}
+                  key={user.id}
+                >
+                  <td>{user.id}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.data.map((e, i) => (
-                  <tr
-                    onClick={() => selectUser(e)}
-                    className={`user-select-none ${
-                      e === selectedUser ? 'table-active' : ''
-                    }`}
-                    style={{ cursor: 'pointer' }}
-                    key={i}
-                  >
-                    <td>{e.id}</td>
-                    <td>{e.name}</td>
-                    <td>{e.email}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-      <Form method='post'></Form>
     </div>
   )
 }

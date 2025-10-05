@@ -19,14 +19,12 @@ export function AddUserModal({ form, children }) {
   }, [navigation.state, actionData])
 
   const modalButton = (
-    <button
-      className={`btn btn-success  text-capitalize ${
-        form ? 'form-control' : 'position-absolute start-0'
-      }`}
+    <span
+      className={`btn btn-success  text-capitalize align-content-center`}
       onClick={() => setIsOpen(true)}
     >
       {children}
-    </button>
+    </span>
   )
 
   if (!isOpen) {
