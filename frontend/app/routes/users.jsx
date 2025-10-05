@@ -1,6 +1,6 @@
 import { useLoaderData } from 'react-router'
 import { AddUserModal } from '../components/AddUserModal'
-import { UserEntry } from '../components/UserEntry'
+import { UserEntry } from '../components/ItemEntry'
 import { getUsers, addUser } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'

@@ -20,7 +20,7 @@ export function AddUserModal({ form, children }) {
 
   const modalButton = (
     <span
-      className={`btn btn-success  text-capitalize align-content-center`}
+      className={`btn btn-success text-capitalize align-content-center`}
       onClick={() => setIsOpen(true)}
     >
       {children}

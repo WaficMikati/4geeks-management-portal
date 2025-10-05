@@ -1,6 +1,5 @@
 import { Link, useLoaderData } from 'react-router'
-import { AddUserModal } from '../components/AddUserModal'
-import { UserEntry } from '../components/UserEntry'
+import { UserEntry } from '../components/ItemEntry'
 import { getOrders, addOrder } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'
@@ -9,8 +8,7 @@ export { getOrders as loader }
 export { addOrder as action }
 
 export default function Users() {
-  const users = useLoaderData()
-  console.log(users)
+  const orders = useLoaderData()
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
@@ -23,7 +21,7 @@ export default function Users() {
           <input
             className='form-control p-3 fs-5'
             type='text'
-            placeholder='Type to search users'
+            placeholder='Type to search orders'
           />
           <Link
             to='/orders/new'
@@ -44,11 +42,11 @@ export default function Users() {
                 <th className='text-start'>Name</th>
                 <th className='text-start'>Amount</th>
                 <th>Date Created</th>
-                <th>Users</th>
+                <th>Orders</th>
               </tr>
             </thead>
             <tbody>
-              {users.data.map(({ product_name, amount, id, created_at }) => (
+              {orders.data.map(({ product_name, amount, id, created_at }) => (
                 <UserEntry
                   key={id}
                   id={id}

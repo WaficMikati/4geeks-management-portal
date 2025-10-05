@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 
-export function UserEntry({ name, email, amount, id, createdAt, orders }) {
+export function ItemEntry({ name, email, amount, id, createdAt, orders }) {
   const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
     month: 'long',
     day: '2-digit',
