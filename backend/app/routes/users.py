@@ -1,56 +1,61 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy.exc import IntegrityError
+
 from app import db
 from app.models import User
-from sqlalchemy.exc import IntegrityError
-import re
+from app.utils.validators import (
+    is_valid_email,
+    validate_required_fields,
+    validate_non_empty_string,
+)
 
 users_bp = Blueprint("users", __name__, url_prefix="/users")
 
 
-def is_valid_email(email):
-    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-    return re.match(pattern, email) is not None
-
-
 @users_bp.route("/", methods=["GET"])
 def get_users():
-    users = User.query.all()
+    try:
+        users = User.query.all()
 
-    return jsonify(
-        {
-            "success": True,
-            "data": [
-                {
-                    "id": user.id,
-                    "name": user.name,
-                    "email": user.email,
-                    "created_at": user.created_at.isoformat(),
-                }
-                for user in users
-            ],
-        }
-    ), 200
+        return jsonify(
+            {
+                "success": True,
+                "message": "Users retrieved successfully",
+                "data": [
+                    {
+                        "id": user.id,
+                        "name": user.name,
+                        "email": user.email,
+                        "created_at": user.created_at.isoformat(),
+                    }
+                    for user in users
+                ],
+            }
+        ), 200
+    except Exception:
+        return jsonify(
+            {
+                "success": False,
+                "message": "An error occurred while retrieving users",
+            }
+        ), 500
 
 
 @users_bp.route("/", methods=["POST"])
 def create_user():
     data = request.get_json()
 
-    if not data or "name" not in data or "email" not in data:
-        return jsonify(
-            {
-                "success": False,
-                "message": "Name and email are both required",
-            }
-        ), 400
+    is_valid, error_message = validate_required_fields(data, ["name", "email"])
+    if not is_valid:
+        return jsonify({"success": False, "message": error_message}), 400
 
-    if not data["name"].strip() or not data["email"].strip():
-        return jsonify(
-            {
-                "success": False,
-                "message": "Name and email cannot be empty",
-            }
-        ), 400
+    is_valid, error_message = validate_non_empty_string(data["name"], "Name")
+    if not is_valid:
+        return jsonify({"success": False, "message": error_message}), 400
+
+    is_valid, error_message = validate_non_empty_string(data["email"], "Email")
+    if not is_valid:
+        return jsonify({"success": False, "message": error_message}), 400
 
     if not is_valid_email(data["email"]):
         return jsonify(
@@ -87,37 +92,57 @@ def create_user():
                 "message": "A user with this email already exists",
             }
         ), 409
+    except Exception:
+        db.session.rollback()
+        return jsonify(
+            {
+                "success": False,
+                "message": "An error occurred while creating the user",
+            }
+        ), 500
 
 
 @users_bp.route("/<int:user_id>/orders", methods=["GET"])
 def get_user_orders(user_id):
-    user = User.query.get(user_id)
+    try:
+        user = User.query.get(user_id)
 
-    if not user:
+        if not user:
+            return jsonify(
+                {
+                    "success": False,
+                    "message": f"No user was found with user_id {user_id}",
+                }
+            ), 404
+
         return jsonify(
-            {"success": False, "message": f"No user was found with ID# {user_id}"}
-        ), 404
-
-    return jsonify(
-        {
-            "success": True,
-            "data": {
-                "user": {
-                    "id": user.id,
-                    "name": user.name,
-                    "email": user.email,
-                    "created_at": user.created_at.isoformat(),
+            {
+                "success": True,
+                "message": "User orders retrieved successfully",
+                "data": {
+                    "user": {
+                        "id": user.id,
+                        "name": user.name,
+                        "email": user.email,
+                        "created_at": user.created_at.isoformat(),
+                    },
+                    "orders": [
+                        {
+                            "id": order.id,
+                            "product_name": order.product.name,
+                            "quantity": order.quantity,
+                            "amount": order.amount,
+                            "created_at": order.created_at.isoformat(),
+                        }
+                        for order in user.orders
+                    ],
                 },
-                "orders": [
-                    {
-                        "id": order.id,
-                        "product_name": order.product.name,
-                        "quantity": order.quantity,
-                        "amount": order.amount,
-                        "created_at": order.created_at.isoformat(),
-                    }
-                    for order in user.orders
-                ],
-            },
-        }
-    ), 200
+            }
+        ), 200
+    except Exception:
+        return jsonify(
+            {
+                "success": False,
+                "message": "An error occurred while retrieving user orders",
+            }
+        ), 500

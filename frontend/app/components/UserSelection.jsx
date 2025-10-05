@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'
-import { AddUserModal } from './AddUserModal'
+import { AddItemModal } from './AddItemModal'
 
 export function UserSelection({
   users,
@@ -10,6 +10,11 @@ export function UserSelection({
   searchTerm,
   onSearchChange
 }) {
+  const userFields = [
+    { name: 'name', placeholder: 'First Middle Last' },
+    { name: 'email', placeholder: 'email@domain.com' }
+  ]
+
   return (
     <>
       <div className='container flex-shrink-0 px-3 mb-3'>
@@ -33,9 +38,12 @@ export function UserSelection({
               value={searchTerm}
               onChange={e => onSearchChange(e.target.value)}
             />
-            <AddUserModal form={true}>
+            <AddItemModal
+              title='Add New User'
+              fields={userFields}
+            >
               <FontAwesomeIcon icon={faPlus} />
-            </AddUserModal>
+            </AddItemModal>
           </div>
         </div>
       </div>

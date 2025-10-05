@@ -2,15 +2,10 @@ import { Form, useActionData, useNavigation } from 'react-router'
 import { useState, useEffect } from 'react'
 import { InputGroup } from './InputGroup'
 
-export function AddUserModal({ form, children }) {
+export function AddItemModal({ children, title, fields }) {
   const [isOpen, setIsOpen] = useState(false)
   const actionData = useActionData()
   const navigation = useNavigation()
-
-  const formFields = [
-    { name: 'name', placeholder: 'First Middle Last' },
-    { name: 'email', placeholder: 'email@domain.com' }
-  ]
 
   useEffect(() => {
     if (navigation.state === 'idle' && actionData && !actionData.error) {
@@ -20,7 +15,7 @@ export function AddUserModal({ form, children }) {
 
   const modalButton = (
     <span
-      className={`btn btn-success text-capitalize align-content-center`}
+      className='btn btn-success text-capitalize align-content-center'
       onClick={() => setIsOpen(true)}
     >
       {children}
@@ -42,9 +37,7 @@ export function AddUserModal({ form, children }) {
           <div className='modal-content'>
             <Form method='post'>
               <div className='modal-header border-0'>
-                <h1 className='modal-title fs-5 text-capitalize'>
-                  Add New User
-                </h1>
+                <h1 className='modal-title fs-5 text-capitalize'>{title}</h1>
                 <button
                   type='button'
                   className='btn-close'
@@ -61,7 +54,7 @@ export function AddUserModal({ form, children }) {
                     {actionData.error}
                   </div>
                 )}
-                {formFields.map(({ name, placeholder }, i) => (
+                {fields.map(({ name, placeholder }, i) => (
                   <InputGroup
                     key={i}
                     name={name}

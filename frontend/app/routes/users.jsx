@@ -1,11 +1,12 @@
 import { useLoaderData, useNavigate } from 'react-router'
-import { AddUserModal } from '../components/AddUserModal'
+import { AddItemModal } from '../components/AddItemModal'
 import { ProfileModal } from '../components/ProfileModal'
+import { SearchBar } from '../components/SearchBar'
+import { PageHeader } from '../components/PageHeader'
 import { getUsers, addUser, getUserOrders } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'
 import { useState } from 'react'
-import { ExportButton } from '../components/ExportButton'
 
 export { getUsers as loader }
 export { addUser as action }
@@ -23,6 +24,11 @@ export default function Users() {
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.id.toString().includes(searchTerm)
   )
+
+  const userFields = [
+    { name: 'name', placeholder: 'First Middle Last' },
+    { name: 'email', placeholder: 'email@domain.com' }
+  ]
 
   async function handleUserClick(user) {
     setSelectedUser(user)
@@ -45,28 +51,24 @@ export default function Users() {
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <div className='container py-3 flex-shrink-0 position-relative'>
-        <h1 className='m-0 text-center display-5'>Users</h1>
-        <ExportButton
-          data={users.data}
-          filename='users'
-        />
-      </div>
+      <PageHeader
+        title='Users'
+        data={users.data}
+        filename='users'
+      />
 
-      <div className='container flex-shrink-0 px-3 mb-3'>
-        <div className='input-group flex-nowrap'>
-          <input
-            className='form-control p-3 fs-5'
-            type='text'
-            placeholder='Type to search users'
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <AddUserModal>
-            <FontAwesomeIcon icon={faPlus} />
-          </AddUserModal>
-        </div>
-      </div>
+      <SearchBar
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder='Type to search users'
+      >
+        <AddItemModal
+          title='Add New User'
+          fields={userFields}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </AddItemModal>
+      </SearchBar>
 
       <div className='flex-grow-1 overflow-auto'>
         <div className='container h-100'>

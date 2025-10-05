@@ -1,4 +1,5 @@
 import { useLoaderData } from 'react-router'
+import { PageHeader } from '../components/PageHeader'
 import { getDashboard } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -50,9 +51,7 @@ export default function Dashboard() {
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <div className='container py-3 flex-shrink-0'>
-        <h1 className='m-0 text-center display-5'>Dashboard</h1>
-      </div>
+      <PageHeader title='Dashboard' />
 
       <div className='flex-grow-0 overflow-auto mt-0 mb-3'>
         <div className='container h-100'>

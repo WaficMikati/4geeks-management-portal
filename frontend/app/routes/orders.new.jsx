@@ -5,12 +5,13 @@ import {
   useNavigate,
   useLocation
 } from 'react-router'
+import { PageHeader } from '../components/PageHeader'
 import { getUsers, getProducts, addUser } from '../utils/apiCalls'
 import { API_URL } from '../config'
 import { UserSelection } from '../components/UserSelection'
 import { ProductSelection } from '../components/ProductSelection'
 import { Summary } from '../components/Summary'
-import { useState, useEffect } from 'react'
+import { useReducer, useEffect } from 'react'
 
 export async function loader() {
   const [users, products] = await Promise.all([getUsers(), getProducts()])
@@ -19,70 +20,96 @@ export async function loader() {
 
 export { addUser as action }
 
+const initialState = {
+  currentPage: 1,
+  selectedUser: null,
+  selectedProducts: [],
+  userSearchTerm: '',
+  productSearchTerm: '',
+  isSubmitting: false
+}
+
+function orderReducer(state, action) {
+  switch (action.type) {
+    case 'SET_PAGE':
+      return { ...state, currentPage: action.payload }
+    case 'SELECT_USER':
+      return { ...state, selectedUser: action.payload }
+    case 'TOGGLE_PRODUCT':
+      const exists = state.selectedProducts.find(
+        p => p.id === action.payload.id
+      )
+      return {
+        ...state,
+        selectedProducts: exists
+          ? state.selectedProducts.filter(p => p.id !== action.payload.id)
+          : [...state.selectedProducts, action.payload]
+      }
+    case 'SET_USER_SEARCH':
+      return { ...state, userSearchTerm: action.payload }
+    case 'SET_PRODUCT_SEARCH':
+      return { ...state, productSearchTerm: action.payload }
+    case 'SET_SUBMITTING':
+      return { ...state, isSubmitting: action.payload }
+    case 'RESET_USER':
+      return { ...state, selectedUser: null }
+    case 'PRESELECT_USER':
+      return { ...state, selectedUser: action.payload, currentPage: 2 }
+    default:
+      return state
+  }
+}
+
 export default function NewOrder() {
   const { users, products } = useLoaderData()
   const actionData = useActionData()
   const navigate = useNavigate()
   const location = useLocation()
-  const [currentPage, setCurrentPage] = useState(1)
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [selectedProducts, setSelectedProducts] = useState([])
-  const [userSearchTerm, setUserSearchTerm] = useState('')
-  const [productSearchTerm, setProductSearchTerm] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [state, dispatch] = useReducer(orderReducer, initialState)
 
-  // Handle preselected user from navigation state
   useEffect(() => {
     if (location.state?.preselectedUser) {
-      setSelectedUser(location.state.preselectedUser)
-      setCurrentPage(2)
+      dispatch({
+        type: 'PRESELECT_USER',
+        payload: location.state.preselectedUser
+      })
     }
   }, [location.state])
 
   useEffect(() => {
-    if (actionData && !actionData.error && currentPage === 1) {
-      setSelectedUser(null)
+    if (actionData && !actionData.error && state.currentPage === 1) {
+      dispatch({ type: 'RESET_USER' })
     }
-  }, [actionData, currentPage])
-
-  function toggleProduct(product) {
-    setSelectedProducts(prev => {
-      const exists = prev.find(p => p.id === product.id)
-      if (exists) {
-        return prev.filter(p => p.id !== product.id)
-      }
-      return [...prev, product]
-    })
-  }
+  }, [actionData, state.currentPage])
 
   function isProductSelected(product) {
-    return selectedProducts.some(p => p.id === product.id)
+    return state.selectedProducts.some(p => p.id === product.id)
   }
 
   function goToNextPage() {
-    if (currentPage === 1 && selectedUser) {
-      setCurrentPage(2)
-    } else if (currentPage === 2 && selectedProducts.length > 0) {
-      setCurrentPage(3)
+    if (state.currentPage === 1 && state.selectedUser) {
+      dispatch({ type: 'SET_PAGE', payload: 2 })
+    } else if (state.currentPage === 2 && state.selectedProducts.length > 0) {
+      dispatch({ type: 'SET_PAGE', payload: 3 })
     }
   }
 
   function goToPreviousPage() {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1)
+    if (state.currentPage > 1) {
+      dispatch({ type: 'SET_PAGE', payload: state.currentPage - 1 })
     }
   }
 
   async function handleSubmit() {
-    setIsSubmitting(true)
+    dispatch({ type: 'SET_SUBMITTING', payload: true })
 
     try {
-      for (const product of selectedProducts) {
+      for (const product of state.selectedProducts) {
         const response = await fetch(`${API_URL}/api/orders/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            user_id: selectedUser.id,
+            user_id: state.selectedUser.id,
             product_id: product.id,
             amount: product.price,
             quantity: 1
@@ -96,7 +123,7 @@ export default function NewOrder() {
               errorData.message || 'Failed to create order'
             }`
           )
-          setIsSubmitting(false)
+          dispatch({ type: 'SET_SUBMITTING', payload: false })
           return
         }
       }
@@ -104,73 +131,80 @@ export default function NewOrder() {
       navigate('/orders')
     } catch (error) {
       alert('Failed to create orders. Please try again.')
-      setIsSubmitting(false)
+      dispatch({ type: 'SET_SUBMITTING', payload: false })
     }
   }
 
   const filteredUsers = users.data.filter(
     user =>
-      user.name.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(userSearchTerm.toLowerCase()) ||
-      user.id.toString().includes(userSearchTerm)
+      user.name.toLowerCase().includes(state.userSearchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(state.userSearchTerm.toLowerCase()) ||
+      user.id.toString().includes(state.userSearchTerm)
   )
 
   const filteredProducts = products.data.filter(product =>
-    product.name.toLowerCase().includes(productSearchTerm.toLowerCase())
+    product.name.toLowerCase().includes(state.productSearchTerm.toLowerCase())
   )
 
   const pageTitle =
-    currentPage === 1
+    state.currentPage === 1
       ? 'Select User'
-      : currentPage === 2
+      : state.currentPage === 2
       ? 'Select Products'
       : 'Summary'
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <div className='container py-3 flex-shrink-0'>
-        <div className='d-flex justify-content-center align-items-center position-relative'>
-          <button
-            className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
-            onClick={
-              currentPage === 1 ? () => navigate('/orders') : goToPreviousPage
-            }
-          >
-            {currentPage === 1 ? 'Back to Orders' : 'Previous'}
-          </button>
-          <h1 className='m-0 display-5'>New Order - {pageTitle}</h1>
-        </div>
-      </div>
+      <PageHeader title={`New Order - ${pageTitle}`}>
+        <button
+          className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
+          onClick={
+            state.currentPage === 1
+              ? () => navigate('/orders')
+              : goToPreviousPage
+          }
+        >
+          {state.currentPage === 1 ? 'Back to Orders' : 'Previous'}
+        </button>
+      </PageHeader>
 
-      {currentPage === 1 && (
+      {state.currentPage === 1 && (
         <UserSelection
           users={filteredUsers}
-          selectedUser={selectedUser}
-          onSelectUser={setSelectedUser}
+          selectedUser={state.selectedUser}
+          onSelectUser={user =>
+            dispatch({ type: 'SELECT_USER', payload: user })
+          }
           onNext={goToNextPage}
-          searchTerm={userSearchTerm}
-          onSearchChange={setUserSearchTerm}
+          searchTerm={state.userSearchTerm}
+          onSearchChange={term =>
+            dispatch({ type: 'SET_USER_SEARCH', payload: term })
+          }
         />
       )}
 
-      {currentPage === 2 && (
+      {state.currentPage === 2 && (
         <ProductSelection
           products={filteredProducts}
-          selectedProducts={selectedProducts}
-          onToggleProduct={toggleProduct}
+          selectedProducts={state.selectedProducts}
+          onToggleProduct={product =>
+            dispatch({ type: 'TOGGLE_PRODUCT', payload: product })
+          }
           isProductSelected={isProductSelected}
           onNext={goToNextPage}
-          searchTerm={productSearchTerm}
-          onSearchChange={setProductSearchTerm}
+          searchTerm={state.productSearchTerm}
+          onSearchChange={term =>
+            dispatch({ type: 'SET_PRODUCT_SEARCH', payload: term })
+          }
         />
       )}
 
-      {currentPage === 3 && (
+      {state.currentPage === 3 && (
         <Summary
-          selectedUser={selectedUser}
-          selectedProducts={selectedProducts}
+          selectedUser={state.selectedUser}
+          selectedProducts={state.selectedProducts}
           onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
+          isSubmitting={state.isSubmitting}
         />
       )}
     </div>

@@ -1,9 +1,10 @@
 import { Link, useLoaderData } from 'react-router'
+import { SearchBar } from '../components/SearchBar'
+import { PageHeader } from '../components/PageHeader'
 import { getOrders } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'
 import { useState, useMemo } from 'react'
-import { ExportButton } from '../components/ExportButton'
 
 export { getOrders as loader }
 
@@ -53,31 +54,24 @@ export default function Orders() {
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <div className='container py-3 flex-shrink-0 position-relative'>
-        <h1 className='m-0 text-center display-5'>Orders</h1>
-        <ExportButton
-          data={orders.data}
-          filename='orders'
-        />
-      </div>
+      <PageHeader
+        title='Orders'
+        data={orders.data}
+        filename='orders'
+      />
 
-      <div className='container flex-shrink-0 px-3 mb-3'>
-        <div className='input-group flex-nowrap'>
-          <input
-            className='form-control p-3 fs-5'
-            type='text'
-            placeholder='Type to search orders'
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <Link
-            to='/orders/new'
-            className='btn btn-success align-content-center'
-          >
-            <FontAwesomeIcon icon={faPlus} />
-          </Link>
-        </div>
-      </div>
+      <SearchBar
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder='Type to search orders'
+      >
+        <Link
+          to='/orders/new'
+          className='btn btn-success align-content-center'
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </Link>
+      </SearchBar>
 
       <div className='flex-grow-1 overflow-auto'>
         <div className='container h-100'>

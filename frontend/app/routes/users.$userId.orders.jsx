@@ -1,5 +1,6 @@
-import { Link, useLoaderData, useParams } from 'react-router'
-import { ItemEntry } from '../components/ItemEntry'
+import { Link, useLoaderData } from 'react-router'
+import { SearchBar } from '../components/SearchBar'
+import { PageHeader } from '../components/PageHeader'
 import { getUserOrders } from '../utils/apiCalls'
 import { useState } from 'react'
 
@@ -7,7 +8,6 @@ export { getUserOrders as loader }
 
 export default function UserOrders() {
   const data = useLoaderData()
-  const { userId } = useParams()
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredOrders = data.data.orders.filter(
@@ -19,17 +19,14 @@ export default function UserOrders() {
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <div className='container py-3 flex-shrink-0'>
-        <div className='d-flex justify-content-center align-items-center position-relative'>
-          <Link
-            className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
-            to='/users'
-          >
-            Back to Users
-          </Link>
-          <h1 className='m-0 display-5'>{data.data.user.name}'s Orders</h1>
-        </div>
-      </div>
+      <PageHeader title={`${data.data.user.name}'s Orders`}>
+        <Link
+          className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
+          to='/users'
+        >
+          Back to Users
+        </Link>
+      </PageHeader>
 
       <div className='container flex-shrink-0 px-3 mb-3'>
         <div className='card bg-body-secondary'>
@@ -47,15 +44,11 @@ export default function UserOrders() {
         </div>
       </div>
 
-      <div className='container flex-shrink-0 px-3 mb-3'>
-        <input
-          className='form-control p-3 fs-5'
-          type='text'
-          placeholder='Type to search orders'
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <SearchBar
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder='Type to search orders'
+      />
 
       <div className='flex-grow-1 overflow-auto'>
         <div className='container h-100'>
@@ -71,16 +64,35 @@ export default function UserOrders() {
             </thead>
             <tbody>
               {filteredOrders.map(
-                ({ product_name, amount, id, created_at }) => (
-                  <ItemEntry
-                    key={id}
-                    id={id}
-                    name={product_name}
-                    amount={amount}
-                    createdAt={created_at}
-                    hideAction={true}
-                  />
-                )
+                ({ product_name, amount, id, created_at }) => {
+                  const formattedDate = new Date(created_at).toLocaleDateString(
+                    'en-US',
+                    {
+                      month: 'long',
+                      day: '2-digit',
+                      year: 'numeric'
+                    }
+                  )
+
+                  return (
+                    <tr
+                      key={id}
+                      className='align-middle'
+                    >
+                      <td>
+                        <img
+                          src='https://placehold.co/75x75'
+                          alt='...'
+                          className='img-fluid rounded-circle my-1'
+                        />
+                      </td>
+                      <td className='text-start'>{id}</td>
+                      <td className='text-start'>{product_name}</td>
+                      <td className='text-start'>${amount.toFixed(2)}</td>
+                      <td>{formattedDate}</td>
+                    </tr>
+                  )
+                }
               )}
             </tbody>
           </table>

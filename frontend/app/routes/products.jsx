@@ -1,10 +1,11 @@
 import { useLoaderData } from 'react-router'
-import { AddProductModal } from '../components/AddProductModal'
+import { AddItemModal } from '../components/AddItemModal'
+import { SearchBar } from '../components/SearchBar'
+import { PageHeader } from '../components/PageHeader'
 import { getProducts, addProduct } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'
 import { useState } from 'react'
-import { ExportButton } from '../components/ExportButton'
 
 export { getProducts as loader }
 export { addProduct as action }
@@ -20,30 +21,31 @@ export default function Products() {
       product.price.toString().includes(searchTerm)
   )
 
+  const productFields = [
+    { name: 'name', placeholder: 'Product Name' },
+    { name: 'price', placeholder: '0.00' }
+  ]
+
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <div className='container py-3 flex-shrink-0 position-relative'>
-        <h1 className='m-0 text-center display-5'>Products</h1>
-        <ExportButton
-          data={products.data}
-          filename='products'
-        />
-      </div>
+      <PageHeader
+        title='Products'
+        data={products.data}
+        filename='products'
+      />
 
-      <div className='container flex-shrink-0 px-3 mb-3'>
-        <div className='input-group flex-nowrap'>
-          <input
-            className='form-control p-3 fs-5'
-            type='text'
-            placeholder='Type to search products'
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <AddProductModal>
-            <FontAwesomeIcon icon={faPlus} />
-          </AddProductModal>
-        </div>
-      </div>
+      <SearchBar
+        value={searchTerm}
+        onChange={setSearchTerm}
+        placeholder='Type to search products'
+      >
+        <AddItemModal
+          title='Add New Product'
+          fields={productFields}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </AddItemModal>
+      </SearchBar>
 
       <div className='flex-grow-1 overflow-auto'>
         <div className='container h-100'>

@@ -1,67 +1,61 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.exc import IntegrityError
+
 from app import db
 from app.models import Product
-from sqlalchemy.exc import IntegrityError
+from app.utils.validators import (
+    validate_required_fields,
+    validate_non_empty_string,
+    validate_positive_number,
+)
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
 
 
 @products_bp.route("/", methods=["GET"])
 def get_products():
-    products = Product.query.all()
+    try:
+        products = Product.query.all()
 
-    return jsonify(
-        {
-            "success": True,
-            "data": [
-                {
-                    "id": product.id,
-                    "name": product.name,
-                    "price": product.price,
-                    "created_at": product.created_at.isoformat(),
-                }
-                for product in products
-            ],
-        }
-    ), 200
+        return jsonify(
+            {
+                "success": True,
+                "message": "Products retrieved successfully",
+                "data": [
+                    {
+                        "id": product.id,
+                        "name": product.name,
+                        "price": product.price,
+                        "created_at": product.created_at.isoformat(),
+                    }
+                    for product in products
+                ],
+            }
+        ), 200
+    except Exception:
+        return jsonify(
+            {
+                "success": False,
+                "message": "An error occurred while retrieving products",
+            }
+        ), 500
 
 
 @products_bp.route("/", methods=["POST"])
 def create_product():
     data = request.get_json()
 
-    if not data or "name" not in data or "price" not in data:
-        return jsonify(
-            {
-                "success": False,
-                "message": "Name and price are both required",
-            }
-        ), 400
+    is_valid, error_message = validate_required_fields(data, ["name", "price"])
+    if not is_valid:
+        return jsonify({"success": False, "message": error_message}), 400
 
-    if not data["name"].strip():
-        return jsonify(
-            {
-                "success": False,
-                "message": "Name cannot be empty",
-            }
-        ), 400
+    is_valid, error_message = validate_non_empty_string(data["name"], "Name")
+    if not is_valid:
+        return jsonify({"success": False, "message": error_message}), 400
 
-    try:
-        price = float(data["price"])
-        if price <= 0:
-            return jsonify(
-                {
-                    "success": False,
-                    "message": "Price must be greater than zero",
-                }
-            ), 400
-    except (ValueError, TypeError):
-        return jsonify(
-            {
-                "success": False,
-                "message": "Price must be a valid number",
-            }
-        ), 400
+    is_valid, price = validate_positive_number(data["price"], "Price")
+    if not is_valid:
+        return jsonify({"success": False, "message": price}), 400
 
     try:
         new_product = Product(name=data["name"], price=price)
@@ -90,3 +84,11 @@ def create_product():
                 "message": "A product with this name already exists",
             }
         ), 409
+    except Exception:
+        db.session.rollback()
+        return jsonify(
+            {
+                "success": False,
+                "message": "An error occurred while creating the product",
+            }
+        ), 500
