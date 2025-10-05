@@ -42,7 +42,8 @@ export async function addUser({ request }) {
   }
 }
 
-export async function getUserOrders(userId) {
+export async function getUserOrders({ params }) {
+  const { userId } = params
   try {
     const response = await fetch(`${API_URL}/api/users/${userId}/orders`)
     if (!response.ok) {
@@ -116,5 +117,47 @@ export async function getDashboard() {
     throw new Response('Cannot connect to server. Please check your connection.', { 
       status: 503 
     })
+  }
+}
+
+export async function getProducts() {
+  try {
+    const response = await fetch(`${API_URL}/api/products/`)
+    if (!response.ok) {
+      throw new Response('Failed to load products. Please try again.', { 
+        status: response.status 
+      })
+    }
+    return response.json()
+  } catch (error) {
+    if (error instanceof Response) throw error
+    throw new Response('Cannot connect to server. Please check your connection.', { 
+      status: 503 
+    })
+  }
+}
+
+export async function addProduct({ request }) {
+  const formData = await request.formData()
+  const data = {
+    name: formData.get('name'),
+    price: formData.get('price')
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/api/products/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    
+    if (!response.ok) {
+      const errorData = await response.json()
+      return { error: errorData.message || 'Failed to create product' }
+    }
+    
+    return { success: true }
+  } catch (error) {
+    return { error: 'Cannot connect to server. Please try again.' }
   }
 }

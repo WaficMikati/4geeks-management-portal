@@ -7,10 +7,15 @@ export default function Navbar() {
   const { toggleTheme } = useTheme()
 
   return (
-    <nav className={`navbar navbar-expand bg-dark-subtle`}>
+    <nav className={`navbar navbar-expand bg-dark-subtle p-3`}>
       <div className='container-fluid'>
-        <span className='nav-brand fw-bold fs-5'>Management Portal</span>
-        <ul className='navbar-nav align-items-center ms-auto'>
+        <Link
+          className='nav-brand fs-4 text-decoration-none text-body'
+          to='/'
+        >
+          Management Portal
+        </Link>
+        <ul className='navbar-nav align-items-center ms-auto fs-6'>
           <li className='nav-item'>
             <Link
               to='/'
@@ -18,7 +23,7 @@ export default function Navbar() {
             >
               Dashboard
             </Link>
-          </li>{' '}
+          </li>
           <li className='nav-item'>
             <Link
               to='/users'
@@ -33,6 +38,14 @@ export default function Navbar() {
               className='nav-link'
             >
               Orders
+            </Link>
+          </li>
+          <li className='nav-item'>
+            <Link
+              to='/products'
+              className='nav-link'
+            >
+              Products
             </Link>
           </li>
           <li className='nav-item'>

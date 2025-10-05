@@ -2,8 +2,14 @@ from flask import Blueprint, request, jsonify
 from app import db
 from app.models import User
 from sqlalchemy.exc import IntegrityError
+import re
 
 users_bp = Blueprint("users", __name__, url_prefix="/users")
+
+
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return re.match(pattern, email) is not None
 
 
 @users_bp.route("/", methods=["GET"])
@@ -43,6 +49,14 @@ def create_user():
             {
                 "success": False,
                 "message": "Name and email cannot be empty",
+            }
+        ), 400
+
+    if not is_valid_email(data["email"]):
+        return jsonify(
+            {
+                "success": False,
+                "message": "Invalid email format",
             }
         ), 400
 
@@ -97,7 +111,8 @@ def get_user_orders(user_id):
                 "orders": [
                     {
                         "id": order.id,
-                        "product_name": order.product_name,
+                        "product_name": order.product.name,
+                        "quantity": order.quantity,
                         "amount": order.amount,
                         "created_at": order.created_at.isoformat(),
                     }

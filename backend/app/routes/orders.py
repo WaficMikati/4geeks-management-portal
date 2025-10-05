@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app import db
-from app.models import Order, User
+from app.models import Order, User, Product
 
 orders_bp = Blueprint("orders", __name__, url_prefix="/orders")
 
@@ -12,7 +12,7 @@ def create_order():
     if (
         not data
         or "user_id" not in data
-        or "product_name" not in data
+        or "product_id" not in data
         or "amount" not in data
     ):
         return jsonify({"success": False, "message": "All fields required"}), 400
@@ -26,9 +26,21 @@ def create_order():
             }
         ), 404
 
+    product = Product.query.get(data["product_id"])
+    if not product:
+        return jsonify(
+            {
+                "success": False,
+                "message": f"No product was found with ID# {data['product_id']}",
+            }
+        ), 404
+
+    quantity = data.get("quantity", 1)
+
     new_order = Order(
         user_id=data["user_id"],
-        product_name=data["product_name"],
+        product_id=data["product_id"],
+        quantity=quantity,
         amount=data["amount"],
     )
 
@@ -42,7 +54,8 @@ def create_order():
             "data": {
                 "id": new_order.id,
                 "user_id": new_order.user_id,
-                "product_name": new_order.product_name,
+                "product_id": new_order.product_id,
+                "quantity": new_order.quantity,
                 "amount": new_order.amount,
                 "created_at": new_order.created_at.isoformat(),
             },
@@ -60,9 +73,14 @@ def get_orders():
             "data": [
                 {
                     "id": order.id,
-                    "product_name": order.product_name,
+                    "quantity": order.quantity,
                     "amount": order.amount,
                     "created_at": order.created_at.isoformat(),
+                    "product": {
+                        "id": order.product.id,
+                        "name": order.product.name,
+                        "price": order.product.price,
+                    },
                     "user": {
                         "id": order.user.id,
                         "name": order.user.name,

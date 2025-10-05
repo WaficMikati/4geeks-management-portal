@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 
-export function ItemEntry({ name, email, amount, id, createdAt, orders }) {
+export function ItemEntry({ name, email, amount, id, createdAt, hideAction }) {
   const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
     month: 'long',
     day: '2-digit',
@@ -20,14 +20,19 @@ export function ItemEntry({ name, email, amount, id, createdAt, orders }) {
       <td className='text-start'>{name}</td>
       <td className='text-start'>
         {email && <a href={`mailto:${email}`}>{email}</a>}
-        {amount && amount}
+        {amount && `$${amount.toFixed(2)}`}
       </td>
       <td>{formattedDate}</td>
-      <td className='text-center'>
-        <Link className='btn btn-primary'>
-          See {email ? 'Orders' : 'Users'}
-        </Link>
-      </td>
+      {!hideAction && (
+        <td className='text-center'>
+          <Link
+            to={email ? `/users/${id}/orders` : '#'}
+            className='btn btn-primary'
+          >
+            See {email ? 'Orders' : 'User'}
+          </Link>
+        </td>
+      )}
     </tr>
   )
 }

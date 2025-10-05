@@ -2,5 +2,10 @@ export {
   faLightbulb,
   faHome,
   faPlus,
-  faX
+  faX,
+  faUsers,
+  faBoxOpen,
+  faShoppingCart,
+  faDollarSign,
+  faDownload
 } from '@fortawesome/free-solid-svg-icons'

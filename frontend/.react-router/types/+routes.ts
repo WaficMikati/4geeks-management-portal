@@ -16,10 +16,18 @@ type Pages = {
   "/users": {
     params: {};
   };
+  "/users/:userId/orders": {
+    params: {
+      "userId": string;
+    };
+  };
   "/orders/new": {
     params: {};
   };
   "/orders": {
+    params: {};
+  };
+  "/products": {
     params: {};
   };
 };
@@ -27,7 +35,7 @@ type Pages = {
 type RouteFiles = {
   "root.jsx": {
     id: "root";
-    page: "/" | "/users" | "/orders/new" | "/orders";
+    page: "/" | "/users" | "/users/:userId/orders" | "/orders/new" | "/orders" | "/products";
   };
   "routes/_index.jsx": {
     id: "routes/_index";
@@ -37,6 +45,10 @@ type RouteFiles = {
     id: "routes/users";
     page: "/users";
   };
+  "routes/users.$userId.orders.jsx": {
+    id: "routes/users.$userId.orders";
+    page: "/users/:userId/orders";
+  };
   "routes/orders.new.jsx": {
     id: "routes/orders.new";
     page: "/orders/new";
@@ -44,5 +56,9 @@ type RouteFiles = {
   "routes/orders.jsx": {
     id: "routes/orders";
     page: "/orders";
+  };
+  "routes/products.jsx": {
+    id: "routes/products";
+    page: "/products";
   };
 };

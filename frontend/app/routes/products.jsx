@@ -1,55 +1,32 @@
-import { useLoaderData, useNavigate } from 'react-router'
-import { AddUserModal } from '../components/AddUserModal'
-import { ProfileModal } from '../components/ProfileModal'
-import { getUsers, addUser, getUserOrders } from '../utils/apiCalls'
+import { useLoaderData } from 'react-router'
+import { AddProductModal } from '../components/AddProductModal'
+import { getProducts, addProduct } from '../utils/apiCalls'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '../utils/faIcons'
 import { useState } from 'react'
 import { ExportButton } from '../components/ExportButton'
 
-export { getUsers as loader }
-export { addUser as action }
+export { getProducts as loader }
+export { addProduct as action }
 
-export default function Users() {
-  const users = useLoaderData()
-  const navigate = useNavigate()
+export default function Products() {
+  const products = useLoaderData()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [userOrders, setUserOrders] = useState([])
 
-  const filteredUsers = users.data.filter(
-    user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.toString().includes(searchTerm)
+  const filteredProducts = products.data.filter(
+    product =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.id.toString().includes(searchTerm) ||
+      product.price.toString().includes(searchTerm)
   )
-
-  async function handleUserClick(user) {
-    setSelectedUser(user)
-    try {
-      const data = await getUserOrders({ params: { userId: user.id } })
-      setUserOrders(data.data.orders)
-    } catch (error) {
-      setUserOrders([])
-    }
-  }
-
-  function handleCloseModal() {
-    setSelectedUser(null)
-    setUserOrders([])
-  }
-
-  function handleCreateOrder(user) {
-    navigate('/orders/new', { state: { preselectedUser: user } })
-  }
 
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
       <div className='container py-3 flex-shrink-0 position-relative'>
-        <h1 className='m-0 text-center display-5'>Users</h1>
+        <h1 className='m-0 text-center display-5'>Products</h1>
         <ExportButton
-          data={users.data}
-          filename='users'
+          data={products.data}
+          filename='products'
         />
       </div>
 
@@ -58,13 +35,13 @@ export default function Users() {
           <input
             className='form-control p-3 fs-5'
             type='text'
-            placeholder='Type to search users'
+            placeholder='Type to search products'
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
-          <AddUserModal>
+          <AddProductModal>
             <FontAwesomeIcon icon={faPlus} />
-          </AddUserModal>
+          </AddProductModal>
         </div>
       </div>
 
@@ -76,12 +53,12 @@ export default function Users() {
                 <th>Photo</th>
                 <th className='text-start'>ID#</th>
                 <th className='text-start'>Name</th>
-                <th className='text-start'>Email</th>
+                <th className='text-start'>Price</th>
                 <th>Date Created</th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map(({ name, email, id, created_at }) => {
+              {filteredProducts.map(({ name, price, id, created_at }) => {
                 const formattedDate = new Date(created_at).toLocaleDateString(
                   'en-US',
                   {
@@ -94,29 +71,17 @@ export default function Users() {
                 return (
                   <tr
                     key={id}
-                    onClick={() =>
-                      handleUserClick({ name, email, id, created_at })
-                    }
-                    style={{ cursor: 'pointer' }}
                     className='align-middle'
                   >
                     <td>
                       <img
                         src='https://placehold.co/75x75'
-                        alt='...'
                         className='img-fluid rounded-circle my-1'
                       />
                     </td>
                     <td className='text-start'>{id}</td>
                     <td className='text-start'>{name}</td>
-                    <td className='text-start'>
-                      <a
-                        href={`mailto:${email}`}
-                        onClick={e => e.stopPropagation()}
-                      >
-                        {email}
-                      </a>
-                    </td>
+                    <td className='text-start'>${price.toFixed(2)}</td>
                     <td>{formattedDate}</td>
                   </tr>
                 )
@@ -125,15 +90,6 @@ export default function Users() {
           </table>
         </div>
       </div>
-
-      {selectedUser && (
-        <ProfileModal
-          user={selectedUser}
-          orders={userOrders}
-          onClose={handleCloseModal}
-          onCreateOrder={handleCreateOrder}
-        />
-      )}
     </div>
   )
 }
