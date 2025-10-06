@@ -9,7 +9,7 @@
 - [Instructions](#instructions)
 - [Personal Note](#personal-note)
 - [Database](#database)
-  - [Tech Stack](#db-stack)
+  - [Tech Stack](#tech-stack)
   - [UML Graph](#uml-graph)
   - [Challenges](#challenges)
   - [Lessons](#lessons)
