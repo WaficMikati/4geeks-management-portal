@@ -156,7 +156,7 @@ export default function NewOrder() {
     <div className='d-flex flex-column h-100 overflow-hidden'>
       <PageHeader title={`New Order - ${pageTitle}`}>
         <button
-          className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
+          className='btn btn-secondary fs-5'
           onClick={
             state.currentPage === 1
               ? () => navigate('/orders')

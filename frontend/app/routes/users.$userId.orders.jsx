@@ -21,7 +21,7 @@ export default function UserOrders() {
     <div className='d-flex flex-column h-100 overflow-hidden'>
       <PageHeader title={`${data.data.user.name}'s Orders`}>
         <Link
-          className='btn btn-secondary position-absolute ms-1 start-0 h-100 align-content-center fs-5'
+          className='btn btn-secondary fs-5'
           to='/users'
         >
           Back to Users
