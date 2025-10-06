@@ -234,6 +234,8 @@ I really enjoyed digging deeper into React Router and getting to know it's navig
 
 I'm also proud of the simple search functionality, as I built it to be frontend based for speed, and implemented term filtering that updates per render as the user types.
 
+Finally, I did my best to make it fully responsive within the timeframe I had.
+
 ## Hosting
 
 ### Render

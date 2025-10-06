@@ -231,6 +231,8 @@ Realmente disfruté profundizar en React Router y conocer mejor su sistema de na
 
 También estoy orgulloso de la funcionalidad de búsqueda simple, ya que la construí para que fuera basada en el frontend para velocidad, e implementé filtrado de términos que se actualiza por renderizado a medida que el usuario escribe.
 
+Por último, hice lo mejor que pude para hacerlo completamente responsivo en el tiempo disponible.
+
 ## Alojamiento
 
 ### Render
