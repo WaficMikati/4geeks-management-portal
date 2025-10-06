@@ -152,11 +152,15 @@ export default function NewOrder() {
       ? 'Select Products'
       : 'Summary'
 
+  const headerTitle = state.selectedUser
+    ? `New Order for ${state.selectedUser.name}`
+    : `New Order - ${pageTitle}`
+
   return (
     <div className='d-flex flex-column h-100 overflow-hidden'>
-      <PageHeader title={`New Order - ${pageTitle}`}>
+      <PageHeader title={headerTitle}>
         <button
-          className='btn btn-secondary fs-5'
+          className='btn btn-secondary fs-5 mt-3 mt-md-0'
           onClick={
             state.currentPage === 1
               ? () => navigate('/orders')

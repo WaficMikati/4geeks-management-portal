@@ -15,7 +15,7 @@ export function ExportButton({ data, filename }) {
 
   return (
     <button
-      className='btn btn-primary position-absolute end-0 top-50 translate-middle-y me-3 fs-5'
+      className='btn btn-primary fs-5 mb-3 mb-md-0'
       onClick={handleExport}
       title='Export to JSON'
     >
