@@ -20,9 +20,14 @@
   - [Lessons](#lessons-1)
 
 - [Frontend](#frontend)
+
   - [Tech Stack](#tech-stack-2)
   - [Challenges](#challenges-2)
   - [Lessons](#lessons-2)
+
+- [Hosting](#hosting)
+  - [Bash Script](#bash-script)
+  - [UptimeRobot](#uptime-robot)
 
 ## Instructions
 
@@ -228,3 +233,17 @@ I struggled to get the fixed headers layout I was after `d-grid`, and learning a
 I really enjoyed digging deeper into React Router and getting to know it's navigation system better. Makes things a lot easier when it comes to state management to detect loading (though I forgot to add it to the navigation of the main pages 🫣)
 
 I'm also proud of the simple search functionality, as I built it to be frontend based for speed, and implemented term filtering that updates per render as the user types.
+
+## Hosting
+
+### Render
+
+As recommended, I used [Render](https://render.com) to host my website, and it was pretty effortless. I did run into some issue because I'm using the free tier, such as being unable to run pre-deploy commands to seed the database, so I wrote a bash script instead.
+
+### Bash Script
+
+The bash script is extremely simple, and saves me from having to modify the entire command inside Render's text box. Instead, I can edit it in my script directly, and I run the script as Render's start command
+
+### UptimeRobot
+
+While polishing the site after I deployed it, I realized that it takes 3-5 mins to boot my Render website after it powers-down due to using the free tier. Upon further research, I discovered that using [UptimeRobot](https://uptimerobot.com) to ping the website every 10 mins was a generally accepted and common solution.

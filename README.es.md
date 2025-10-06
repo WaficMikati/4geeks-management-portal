@@ -21,6 +21,10 @@
   - [Stack Tecnológico](#stack-tecnológico-2)
   - [Desafíos](#desafíos-2)
   - [Lecciones](#lecciones-2)
+- [Alojamiento](#alojamiento)
+  - [Render](#render)
+  - [Script Bash](#script-bash)
+  - [UptimeRobot](#uptimerobot)
 
 ## Instrucciones
 
@@ -226,3 +230,17 @@ Luché para obtener el diseño de encabezados fijos que buscaba con `d-grid`, y 
 Realmente disfruté profundizar en React Router y conocer mejor su sistema de navegación. Hace las cosas mucho más fáciles cuando se trata de gestión de estado para detectar carga (aunque olvidé agregarlo a la navegación de las páginas principales 🫣)
 
 También estoy orgulloso de la funcionalidad de búsqueda simple, ya que la construí para que fuera basada en el frontend para velocidad, e implementé filtrado de términos que se actualiza por renderizado a medida que el usuario escribe.
+
+## Alojamiento
+
+### Render
+
+Como se recomendó, usé [Render](https://render.com) para alojar mi sitio web, y fue bastante sin esfuerzo. Sí encontré algunos problemas porque estoy usando el tier gratuito, como no poder ejecutar comandos pre-deploy para poblar la base de datos, así que escribí un script bash en su lugar.
+
+### Script Bash
+
+El script bash es extremadamente simple, y me ahorra tener que modificar todo el comando dentro del cuadro de texto de Render. En su lugar, puedo editarlo en mi script directamente, y ejecuto el script como comando de inicio de Render
+
+### UptimeRobot
+
+Mientras pulía el sitio después de desplegarlo, me di cuenta de que toma 3-5 mins arrancar mi sitio web de Render después de que se apaga debido a usar el tier gratuito. Tras investigar más, descubrí que usar [UptimeRobot](https://uptimerobot.com) para hacer ping al sitio web cada 10 mins era una solución generalmente aceptada y común.
