@@ -7,6 +7,12 @@ fake = Faker()
 app = create_app()
 
 with app.app_context():
+    if User.query.first() is not None:
+        print("Database already has data. Skipping seed.")
+        exit(0)
+
+    print("Seeding database...")
+
     Order.query.delete()
     User.query.delete()
     Product.query.delete()
