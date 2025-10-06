@@ -7,26 +7,22 @@
 ## Table of Contents
 
 - [Instructions](#instructions)
-
 - [Personal Note](#personal-note)
-
 - [Database](#database)
-
   - [Tech Stack](#db-stack)
-  - [UML Graph](#uml)
-  - [Challenges](#db-challenges)
-  - [Lessons](#db-lessons)
-
+  - [UML Graph](#uml-graph)
+  - [Challenges](#challenges)
+  - [Lessons](#lessons)
 - [Backend](#backend)
 
-  - [Tech Stack](#back-stack)
-  - [Challenges](#back-challenges)
-  - [Lessons](#back-lessons)
+  - [Tech Stack](#tech-stack-1)
+  - [Challenges](#challenges-1)
+  - [Lessons](#lessons-1)
 
 - [Frontend](#frontend)
-  - [Tech Stack](#front-stack)
-  - [Challenges](#front-challenges)
-  - [Lessons](#front-lessons)
+  - [Tech Stack](#tech-stack-2)
+  - [Challenges](#challenges-2)
+  - [Lessons](#lessons-2)
 
 ## Instructions
 
@@ -140,13 +136,13 @@ This was a fun and extremely challenging project for me to tackle. It took me ar
 
 ## Database
 
-### 1. Tech Stack
+### Tech Stack
 
 I used PostgreSQL as it's the one we studied in the bootcamp, and my first and only database so far. I use DBeaver locally to view the database and make quick modifications.
 
 I followed the same patterns from the Instagram and Star Wars API projects from the bootcamp.
 
-### 2. UML Graph
+### UML Graph
 
 You have a look at the code for this graph at [QDB](https://app.quickdatabasediagrams.com/#/d/Uiq9y1)
 
@@ -154,25 +150,25 @@ You have a look at the code for this graph at [QDB](https://app.quickdatabasedia
 
 I chose to add a `Products` table after I completed my `Users` page on the frontend, as I realized it would be very easy to create and display, and would make it easier to create orders.
 
-### 3. Challenges
+### Challenges
 
 I've always been very comfortable with spreadsheets, and have written many little scripts in my life in Python, so this was very straightforward for me. There weren't any challenges as the database is simple and PostgreSQL is easy to use.
 
-### 4. Lessons
+### Lessons
 
 I enjoyed learning about seeding as I've seen this technique applied in my use of p5js and gaming engines, where noise or perlin noise is what is seeded. It was interesting to be on the dev side of it this time, even though I used Faker to do that, which was very easy to use.
 
 ## Backend
 
-### 1. Tech Stack
+### Tech Stack
 
 I am using Flask for my backend, SQLAlchemy to manage the database, and Migrate to update it with version tracking. I use Pytest for testing. I also added Gunicorn to be able to host my backend (more about this is the hosting section).
 
-### 2. Challenges
+### Challenges
 
 Digging deeper into errors and returning better errors while maintaining consistency took up a large portion of my programming time. Going back and forth between the frontend fetch calls and the backend error returns was as tedious as it was rewarding. In the end I made sure to go back and make all my errors follow consistent patterns.
 
-### 3. Lessons
+### Lessons
 
 I would mainly like to highlight my error checking, as it took me the most effort and time to build and refine. I followed the [MDN Standards](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status) to make sure I returned appropriate status codes.
 
@@ -195,7 +191,7 @@ I would mainly like to highlight my error checking, as it took me the most effor
 
 ## Frontend
 
-### 1. Tech Stack
+### Tech Stack
 
 To put the skills and tools I learned in the bootcamp to use, I stuck with the same tech stack being taught. However, I did start the project from [my own template](https://github.com/WaficMikati/react-router-js-template) that I have been working on and expanding over the course of the bootcamp, which I try to keep updated to the latest versions of each technology:
 
@@ -205,7 +201,7 @@ To put the skills and tools I learned in the bootcamp to use, I stuck with the s
 - Bootstrap 5 as my CSS library
 - FontAwesome for my icons
 
-### 2. Challenges
+### Challenges
 
 Having worked with React very intensely and in pursuit of professional code, I was very comfortable with it, especially since I have my own template built from scratch to learn React Router framework mode. This made constructing the project a breeze.
 
@@ -215,7 +211,7 @@ Another challenge was figuring out how to make a multi-page form for new orders,
 
 The theme toggle was harder than I expected as well, as I usually just add `data-bs-theme` and modify the value in the `<html>` tag with React state or context, but this was causing hydration errors in React Router, so I had to use `document.documentElement.setAttribute('data-bs-theme', savedTheme)` in a `useEffect` within the my `ThemeContext`, and stored it locally to avoid flashes when refreshing or changing pages, as the SSR would cause it to revert to the light theme for a split second.
 
-### 3. Lessons
+### Lessons
 
 I'd like to highlight my multi-page order system, which I created by expanding upon my pagination concept from my [Todo List](https://github.com/WaficMikati/4geeks-todo-list) project from the bootcamp.
 
