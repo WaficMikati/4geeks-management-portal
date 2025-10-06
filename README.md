@@ -1,6 +1,6 @@
 # Management Portal
 
-[View Live Website](https://fourgeeks-management-portal.render.com/)
+[View Live Website](https://fourgeeks-management-portal.onrender.com/)
 
 ![Preview](frontend/public/preview.png)
 
@@ -50,16 +50,22 @@ DATABASE_URL=postgresql://postgres:****@localhost:5432/management_portal
 
 ### 2. Backend
 
-I highly suggest creating a new virtual environment before installing the dependendcies (listed in `backend/requirements.text`). Skip line 2 of step 1 if you prefer to work globally.
+I highly suggest creating a new virtual environment before installing the dependencies (listed in `backend/requirements.text`). Skip line 2 of step 2 if you prefer to work globally.
 
-1. #### Create new `venv`:
+1. #### Change the value of `SECRET_KEY` to a **Codeigniter Key** from [randomkeygen](https://randomkeygen.com/):
+
+```
+SECRET_KEY=<key from randomkeygen>
+```
+
+2. #### Create new `venv`:
 
 ```bash
 cd backend
 python -m venv venv
 ```
 
-2. #### Activate the `venv`:
+3. #### Activate the `venv`:
 
 - #### Linux/Mac
 
@@ -73,25 +79,25 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-3.  #### Install dependencies:
+4. #### Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. #### Create the database tables:
+5. #### Create the database tables:
 
 ```bash
 flask db upgrade
 ```
 
-5. #### Seed the database to generate and add sample data
+6. #### Seed the database to generate and add sample data
 
 ```bash
 python seed_db.py
 ```
 
-6. #### Finally, start the server:
+7. #### Finally, start the server:
 
 ```bash
 python run.py
@@ -99,10 +105,31 @@ python run.py
 
 ### 3. Frontend
 
+1. #### Install dependencies with pnpm or npm (I use pnpm):
+
+```bash
+cd frontend
+pnpm install OR npm install
+```
+
+2. #### Rename `frontend/.env.example` to `frontend/.env`, and make sure it has the same port set as `FLASK_PORT` in `backend/.env` (default 5000)
+
+3. #### Start the dev server, then visit the link printed in the terminal:
+
+```bash
+pnpm run dev OR npm run dev
+```
+
+### You should now be up and running!
+
+Feel free to message me with any bugs you find.
+
 ## Personal Note
 
-This was a fun and extremely challenging project for me to tackle. It took me around 20 hours to complete, and I learned a lot about professional code and structure (not that I have achieved it 😅). This was my first complete fullstack project, and I am proud of my result. I see the flaw and messiness still leftover in my code, and will clean it up and refine it over time and as my experience grows...
+This was a fun and extremely challenging project for me to tackle. It took me around 20 hours to complete, and I learned a lot about professional code and structure (not that I have achieved it 😅). This was my first complete fullstack project, and I am proud of my result. I see the flaws and messiness still left in my code, and will clean it up and refine it over time and as my experience grows...
 
-```
+## Database
 
-```
+### 1. Tech Stack
+
+I used PostreSQL as it's the one we studied in the bootcamp, and it's my first and only database so far.
